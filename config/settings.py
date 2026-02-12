@@ -6,8 +6,8 @@ Channel monitoring settings
 # Prefer usernames instead of numeric IDs (more readable & portable)
 
 CHANNELS = [
-    "channelusername1",
-    "channelusername2",
+    "bistodo",
+    "FCRealMadrid",
 ]
 
 # Logging
