@@ -12,9 +12,9 @@ import os
 # TG_API_HASH
 # ================================
 
-API_ID = int(os.getenv("TG_API_ID", "0"))
-API_HASH = os.getenv("TG_API_HASH")
-SESSION_NAME = os.getenv("TG_SESSION", "mimicgram")
+API_ID = int(os.getenv("API_ID"))
+API_HASH = os.getenv("API_HASH")
+SESSION_NAME = os.getenv("SESSION_NAME")
 
 if not API_ID or not API_HASH:
     raise RuntimeError("TG_API_ID and TG_API_HASH must be set as environment variables")
