@@ -11,5 +11,5 @@ CHANNELS = [
 ]
 
 # Logging
-LOG_TO_FILE = True
+LOG_TO_FILE =  False
 LOG_FILE_PATH = "logs/mimicgram.log"
