@@ -1,6 +1,5 @@
 """
-MimicGram - Configuration
-Stage 2: Channel monitoring settings
+Channel monitoring settings
 """
 
 # List of channels to monitor
@@ -9,7 +8,6 @@ Stage 2: Channel monitoring settings
 CHANNELS = [
     "channelusername1",
     "channelusername2",
-    # "another_channel"
 ]
 
 # Logging
