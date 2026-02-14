@@ -5,6 +5,7 @@ Listen to new channel posts and detect discussion group
 import asyncio
 import logging
 import os
+import threading
 
 from telethon import events
 from telethon.tl.functions.channels import GetFullChannelRequest
