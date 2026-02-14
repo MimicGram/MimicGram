@@ -4,6 +4,7 @@ Listen to new channel posts and detect discussion group
 
 import asyncio
 import logging
+import os
 
 from telethon import events
 from telethon.tl.functions.channels import GetFullChannelRequest
@@ -11,7 +12,7 @@ from telethon.tl.functions.channels import GetFullChannelRequest
 from client import client
 from config.settings import CHANNELS, LOG_TO_FILE, LOG_FILE_PATH
 
-
+from http.server import HTTPServer, BaseHTTPRequestHandler
 # ---------------- Logging Setup ---------------- #
 
 logging.basicConfig(
@@ -54,7 +55,19 @@ async def new_post_handler(event):
 
     logging.info("-" * 50)
 
+def run_health_server():
+    port = int(os.environ.get("PORT", 8080))
 
+    class Handler(BaseHTTPRequestHandler):
+        def do_GET(self):
+            self.send_response(200)
+            self.end_headers()
+            self.wfile.write(b"MimicGram is running")
+
+    server = HTTPServer(("0.0.0.0", port), Handler)
+    server.serve_forever()
+
+threading.Thread(target=run_health_server, daemon=True).start()
 # ---------------- Runner ---------------- #
 
 async def main():
