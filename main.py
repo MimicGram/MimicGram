@@ -13,7 +13,7 @@ from behavior.decision import DecisionEngine
 
 from client import client
 from config.settings import CHANNELS, LOG_TO_FILE, LOG_FILE_PATH
-from storage.db import init_db
+from storage.postgres import init_db
 
 from http.server import HTTPServer, BaseHTTPRequestHandler
 # ---------------- Logging Setup ---------------- #
