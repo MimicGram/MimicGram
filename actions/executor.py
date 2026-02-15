@@ -18,14 +18,14 @@ class ActionExecutor:
     MIN_DELAY = 45
     MAX_DELAY = 180
 
-    async def execute(self, client, channel, message):
+    async def execute(self, client, channel, message, discussion_group_id):
         delay = random.randint(self.MIN_DELAY, self.MAX_DELAY)
 
         logging.info(f"Delaying action for {delay} seconds...")
 
         await asyncio.sleep(delay)
 
-        # Generate comment ONCE
+        # Generate comment once
         comment = engine.generate()
 
         # Duplicate protection
@@ -33,12 +33,22 @@ class ActionExecutor:
             logging.info("Duplicate comment detected. Skipping.")
             return
 
-        # Save to memory
+        try:
+            await client.send_message(
+                entity=discussion_group_id,
+                message=comment,
+                reply_to=message.id
+            )
+            logging.info("Comment sent successfully.")
+
+        except Exception as e:
+            logging.error(f"Failed to send comment: {e}")
+            return
+
+        # Save to memory AFTER successful send
         memory.save(comment)
 
         logging.info(
-            f"[SAFE PIPELINE] Generated comment for message {message.id}: {comment} "
-            f"in channel {channel.title}"
+            f"[SAFE PIPELINE] Generated comment for message {message.id}: "
+            f"{comment} in channel {channel.title}"
         )
-
-        # (فعلاً فقط لاگ میزنیم — اگر بعداً خواستی ارسال واقعی اضافه می‌کنیم)
