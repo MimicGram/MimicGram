@@ -43,18 +43,8 @@ async def new_post_handler(event):
     message = event.message
     channel = await event.get_chat()
     decision = decision_engine.decide(channel.id)
-    
-    if decision == "ACT":
-        if humanizer.allow_action(channel.id):
-           logging.info("Humanizer approved action")
 
-           asyncio.create_task(
-               executor.execute(client, channel, event.message)
-            )
-
-        else:
-             logging.info("Humanizer blocked action")
-        
+    # ---- Logging order fixed ---- #
     logging.info(f"Decision: {decision}")
     logging.info(f"New post detected in: {channel.title}")
     logging.info(f"Message ID: {message.id}")
@@ -74,6 +64,19 @@ async def new_post_handler(event):
         logging.error(f"Failed to fetch full channel info: {e}")
 
     logging.info("-" * 50)
+
+    # ---- Humanizer + Executor ---- #
+    if decision == "ACT":
+        if humanizer.allow_action(channel.id):
+            logging.info("Humanizer approved action")
+
+            # create_task for async safe pipeline
+            asyncio.create_task(
+                executor.execute(client, channel, message)
+            )
+        else:
+            logging.info("Humanizer blocked action")
+
 
 def run_health_server():
     port = int(os.environ.get("PORT", 8080))
