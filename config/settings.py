@@ -10,6 +10,9 @@ CHANNELS = [
     "FCRealMadrid",
     "test553344",
     "CrazyTweet",
+    "Say_Fantasy",
+    "NazareToChie",
+    "HipHopTweety",
 ]
 
 # Logging
