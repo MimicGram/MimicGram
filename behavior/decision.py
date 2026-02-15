@@ -1,10 +1,9 @@
 """
-MimicGram - Decision Engine
-Stateful decision logic (No sending)
+Decision Engine (PostgreSQL)
 """
 
 import random
-from storage.db import get_connection
+from storage.postgres import get_connection
 
 
 class DecisionEngine:
@@ -34,31 +33,24 @@ class DecisionEngine:
         return decision
 
     def _get_state(self, channel_id):
-        conn = get_connection()
-        cursor = conn.cursor()
-
-        cursor.execute(
-            "SELECT last_action, skip_count FROM channel_state WHERE channel_id=?",
-            (channel_id,)
-        )
-
-        row = cursor.fetchone()
-        conn.close()
-        return row
+        with get_connection() as conn:
+            with conn.cursor() as cur:
+                cur.execute(
+                    "SELECT last_action, skip_count FROM channel_state WHERE channel_id=%s",
+                    (channel_id,)
+                )
+                return cur.fetchone()
 
     def _save_state(self, channel_id, decision, skip_count):
-        conn = get_connection()
-        cursor = conn.cursor()
-
-        cursor.execute("""
-            INSERT INTO channel_state (channel_id, last_action, skip_count)
-            VALUES (?, ?, ?)
-            ON CONFLICT(channel_id)
-            DO UPDATE SET
-                last_action=excluded.last_action,
-                skip_count=excluded.skip_count,
-                last_updated=CURRENT_TIMESTAMP
-        """, (channel_id, decision, skip_count))
-
-        conn.commit()
-        conn.close()
+        with get_connection() as conn:
+            with conn.cursor() as cur:
+                cur.execute("""
+                    INSERT INTO channel_state (channel_id, last_action, skip_count)
+                    VALUES (%s, %s, %s)
+                    ON CONFLICT (channel_id)
+                    DO UPDATE SET
+                        last_action = EXCLUDED.last_action,
+                        skip_count = EXCLUDED.skip_count,
+                        last_updated = CURRENT_TIMESTAMP
+                """, (channel_id, decision, skip_count))
+            conn.commit()
