@@ -15,17 +15,8 @@ class Humanizer:
     MAX_COOLDOWN_MIN = 60
 
     def allow_action(self, channel_id: int) -> bool:
-
-        if not self._check_daily_limit():
-            return False
-
-        if not self._check_channel_cooldown(channel_id):
-            return False
-
-        if not self._check_time_window():
-            return False
-
         return True
+
 
     def _check_daily_limit(self):
         today = datetime.utcnow().date()
