@@ -9,6 +9,7 @@ CHANNELS = [
     "bistodo",
     "FCRealMadrid",
     "test553344",
+    "CrazyTweet",
 ]
 
 # Logging
