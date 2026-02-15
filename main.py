@@ -41,14 +41,14 @@ async def new_post_handler(event):
     message = event.message
     channel = await event.get_chat()
     decision = decision_engine.decide(channel.id)
-    logging.info(f"Decision: {decision}")
+    
     if decision == "ACT":
-    if humanizer.allow_action(channel.id):
-        logging.info("Humanizer approved action")
-    else:
-        logging.info("Humanizer blocked action")
-
-
+        if humanizer.allow_action(channel.id):
+           logging.info("Humanizer approved action")
+        else:
+           logging.info("Humanizer blocked action")
+        
+    logging.info(f"Decision: {decision}")
     logging.info(f"New post detected in: {channel.title}")
     logging.info(f"Message ID: {message.id}")
     logging.info(f"Text preview: {message.text[:100] if message.text else 'No text'}")
