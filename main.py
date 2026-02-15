@@ -82,6 +82,5 @@ async def main():
     logging.info("MimicGram is now listening for new posts...")
     await client.run_until_disconnected()
 
-
 if __name__ == "__main__":
     asyncio.run(main())
