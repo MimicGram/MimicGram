@@ -13,6 +13,7 @@ from behavior.decision import DecisionEngine
 
 from client import client
 from config.settings import CHANNELS, LOG_TO_FILE, LOG_FILE_PATH
+from storage.db import init_db
 
 from http.server import HTTPServer, BaseHTTPRequestHandler
 # ---------------- Logging Setup ---------------- #
@@ -76,6 +77,7 @@ threading.Thread(target=run_health_server, daemon=True).start()
 # ---------------- Runner ---------------- #
 
 async def main():
+    init_db()
     await client.start()
     logging.info("MimicGram is now listening for new posts...")
     await client.run_until_disconnected()
