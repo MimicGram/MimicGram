@@ -7,7 +7,9 @@ import asyncio
 import random
 import logging
 from datetime import datetime
+from actions.comment_engine import CommentEngine
 
+engine = CommentEngine()
 
 class ActionExecutor:
 
@@ -21,9 +23,11 @@ class ActionExecutor:
 
         await asyncio.sleep(delay)
 
+        comment = engine.generate()
+
         # فعلاً فقط لاگ می‌کنیم
         logging.info(
-            f"[SAFE PIPELINE] Ready to act on message {message.id} "
+            f"[SAFE PIPELINE] Generated comment for message {message.id}: {comment}"
             f"in channel {channel.title}"
         )
 
