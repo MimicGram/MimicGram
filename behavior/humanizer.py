@@ -10,7 +10,7 @@ from storage.postgres import get_connection
 
 class Humanizer:
 
-    DAILY_LIMIT = 12
+    DAILY_LIMIT = 100
     MIN_COOLDOWN_MIN = 20
     MAX_COOLDOWN_MIN = 60
 
@@ -62,12 +62,7 @@ class Humanizer:
         return datetime.utcnow() - last_time > cooldown
 
     def _check_time_window(self):
-        hour = datetime.utcnow().hour
+    return True
 
-        if 2 <= hour <= 7:
-            return random.random() < 0.1
-
-        if 8 <= hour <= 23:
-            return random.random() < 0.6
 
         return False
