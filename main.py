@@ -9,13 +9,14 @@ import threading
 
 from telethon import events
 from telethon.tl.functions.channels import GetFullChannelRequest
+from behavior.decision import DecisionEngine
 
 from client import client
 from config.settings import CHANNELS, LOG_TO_FILE, LOG_FILE_PATH
 
 from http.server import HTTPServer, BaseHTTPRequestHandler
 # ---------------- Logging Setup ---------------- #
-
+decision_engine = DecisionEngine()
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s | %(levelname)s | %(message)s",
@@ -36,6 +37,9 @@ async def new_post_handler(event):
 
     message = event.message
     channel = await event.get_chat()
+    decision = decision_engine.decide(channel.id)
+    logging.info(f"Decision: {decision}")
+
 
     logging.info(f"New post detected in: {channel.title}")
     logging.info(f"Message ID: {message.id}")
