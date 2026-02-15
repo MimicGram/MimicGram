@@ -48,7 +48,7 @@ async def new_post_handler(event):
         if humanizer.allow_action(channel.id):
            logging.info("Humanizer approved action")
 
-            asyncio.create_task(
+           asyncio.create_task(
                executor.execute(client, channel, event.message)
             )
 
