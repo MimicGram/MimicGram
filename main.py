@@ -14,10 +14,12 @@ from behavior.decision import DecisionEngine
 from client import client
 from config.settings import CHANNELS, LOG_TO_FILE, LOG_FILE_PATH
 from storage.postgres import init_db
+from behavior.humanizer import Humanizer
 
 from http.server import HTTPServer, BaseHTTPRequestHandler
 # ---------------- Logging Setup ---------------- #
 decision_engine = DecisionEngine()
+humanizer = Humanizer()
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s | %(levelname)s | %(message)s",
@@ -40,6 +42,11 @@ async def new_post_handler(event):
     channel = await event.get_chat()
     decision = decision_engine.decide(channel.id)
     logging.info(f"Decision: {decision}")
+    if decision == "ACT":
+    if humanizer.allow_action(channel.id):
+        logging.info("Humanizer approved action")
+    else:
+        logging.info("Humanizer blocked action")
 
 
     logging.info(f"New post detected in: {channel.title}")
