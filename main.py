@@ -18,6 +18,7 @@ from storage.postgres import init_db
 from behavior.humanizer import Humanizer
 
 from http.server import HTTPServer, BaseHTTPRequestHandler
+
 # ---------------- Logging Setup ---------------- #
 decision_engine = DecisionEngine()
 humanizer = Humanizer()
@@ -44,13 +45,14 @@ async def new_post_handler(event):
     channel = await event.get_chat()
     decision = decision_engine.decide(channel.id)
 
-    # ---- Logging order fixed ---- #
+    # ---- Logging order ---- #
     logging.info(f"Decision: {decision}")
     logging.info(f"New post detected in: {channel.title}")
     logging.info(f"Message ID: {message.id}")
     logging.info(f"Text preview: {message.text[:100] if message.text else 'No text'}")
 
     # ---- Detect linked discussion ---- #
+    linked_chat_id = None
     try:
         full_channel = await client(GetFullChannelRequest(channel))
         linked_chat_id = full_channel.full_chat.linked_chat_id
@@ -66,18 +68,19 @@ async def new_post_handler(event):
     logging.info("-" * 50)
 
     # ---- Humanizer + Executor ---- #
-    if decision == "ACT":
+    if decision == "ACT" and linked_chat_id:
         if humanizer.allow_action(channel.id):
             logging.info("Humanizer approved action")
 
             # create_task for async safe pipeline
             asyncio.create_task(
-                executor.execute(client, channel, message)
+                executor.execute(client, channel, message, linked_chat_id)
             )
         else:
             logging.info("Humanizer blocked action")
 
 
+# ---------------- Health Check Server ---------------- #
 def run_health_server():
     port = int(os.environ.get("PORT", 8080))
 
@@ -90,14 +93,16 @@ def run_health_server():
     server = HTTPServer(("0.0.0.0", port), Handler)
     server.serve_forever()
 
-threading.Thread(target=run_health_server, daemon=True).start()
-# ---------------- Runner ---------------- #
 
+threading.Thread(target=run_health_server, daemon=True).start()
+
+# ---------------- Runner ---------------- #
 async def main():
     init_db()
     await client.start()
     logging.info("MimicGram is now listening for new posts...")
     await client.run_until_disconnected()
+
 
 if __name__ == "__main__":
     asyncio.run(main())
