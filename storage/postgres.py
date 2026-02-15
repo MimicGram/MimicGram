@@ -23,15 +23,15 @@ def init_db():
                 CREATE TABLE IF NOT EXISTS channel_state (
                     channel_id BIGINT PRIMARY KEY,
                     last_action TEXT,
-                    skip_count INTEGER DEFAULT 0,
                     last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-                );
+                )
             """)
-             cur.execute("""
+
+            cur.execute("""
                 CREATE TABLE IF NOT EXISTS comment_memory (
                     id SERIAL PRIMARY KEY,
                     content TEXT NOT NULL,
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-                );
-             """)
+                )
+            """)
         conn.commit()
