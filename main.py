@@ -10,6 +10,7 @@ import threading
 from telethon import events
 from telethon.tl.functions.channels import GetFullChannelRequest
 from behavior.decision import DecisionEngine
+from actions.executor import ActionExecutor
 
 from client import client
 from config.settings import CHANNELS, LOG_TO_FILE, LOG_FILE_PATH
@@ -20,6 +21,7 @@ from http.server import HTTPServer, BaseHTTPRequestHandler
 # ---------------- Logging Setup ---------------- #
 decision_engine = DecisionEngine()
 humanizer = Humanizer()
+executor = ActionExecutor()
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s | %(levelname)s | %(message)s",
@@ -45,8 +47,13 @@ async def new_post_handler(event):
     if decision == "ACT":
         if humanizer.allow_action(channel.id):
            logging.info("Humanizer approved action")
+
+            asyncio.create_task(
+               executor.execute(client, channel, event.message)
+            )
+
         else:
-           logging.info("Humanizer blocked action")
+             logging.info("Humanizer blocked action")
         
     logging.info(f"Decision: {decision}")
     logging.info(f"New post detected in: {channel.title}")
