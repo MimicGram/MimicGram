@@ -25,7 +25,6 @@ class ActionExecutor:
 
         comment = engine.generate()
 
-        # فعلاً فقط لاگ می‌کنیم
         logging.info(
             f"[SAFE PIPELINE] Generated comment for message {message.id}: {comment}"
             f"in channel {channel.title}"
