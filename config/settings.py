@@ -8,6 +8,7 @@ Channel monitoring settings
 CHANNELS = [
     "bistodo",
     "FCRealMadrid",
+    "test553344",
 ]
 
 # Logging
