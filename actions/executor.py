@@ -6,10 +6,12 @@ Controlled delayed execution
 import asyncio
 import random
 import logging
-from datetime import datetime
 from actions.comment_engine import CommentEngine
+from storage.comment_memory import CommentMemory
 
 engine = CommentEngine()
+memory = CommentMemory()
+
 
 class ActionExecutor:
 
@@ -23,12 +25,20 @@ class ActionExecutor:
 
         await asyncio.sleep(delay)
 
+        # Generate comment ONCE
         comment = engine.generate()
 
+        # Duplicate protection
+        if memory.exists_recent(comment):
+            logging.info("Duplicate comment detected. Skipping.")
+            return
+
+        # Save to memory
+        memory.save(comment)
+
         logging.info(
-            f"[SAFE PIPELINE] Generated comment for message {message.id}: {comment}"
+            f"[SAFE PIPELINE] Generated comment for message {message.id}: {comment} "
             f"in channel {channel.title}"
         )
 
-        # ⚠️ اینجا بعداً ارسال کامنت انجام میشه
-        # await client.send_message(...)
+        # (فعلاً فقط لاگ میزنیم — اگر بعداً خواستی ارسال واقعی اضافه می‌کنیم)
