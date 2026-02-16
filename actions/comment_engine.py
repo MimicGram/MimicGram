@@ -42,13 +42,8 @@ class CommentEngine:
                 ]
     def generate(self):
 
-        structure_type = random.choice(["emoji", "short", "mixed"])
-
-        if structure_type == "emoji":
-            return random.choice(self.BASE_REACTIONS)
+        structure_type = random.choice(["short"])
 
         if structure_type == "short":
             return random.choice(self.SHORT_TEXTS)
 
-        if structure_type == "mixed":
-            return f"{random.choice(self.BASE_REACTIONS)} {random.choice(self.SHORT_TEXTS)}"
