@@ -6,13 +6,13 @@ Channel monitoring settings
 # Prefer usernames instead of numeric IDs (more readable & portable)
 
 CHANNELS = [
-    "bistodo",
-    "FCRealMadrid",
-    "test553344",
+    "Test553344",
     "CrazyTweet",
+    "lit_free",
+    "RapAlert",
     "Say_Fantasy",
     "NazareToChie",
-    "HipHopTweety",
+    "HipHopTweety"
 ]
 
 # Logging
