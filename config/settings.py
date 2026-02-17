@@ -12,7 +12,8 @@ CHANNELS = [
     "RapAlert",
     "Say_Fantasy",
     "NazareToChie",
-    "HipHopTweety"
+    "HipHopTweety",
+    "tweet_varzeshplus",
 ]
 
 # Logging
